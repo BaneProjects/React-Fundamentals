@@ -1,36 +1,14 @@
-import React, { useState } from "react";
-import HouseRow from "./houseRow";
-
-const houseArray = [
-  {
-    id: 1,
-    address: "12 Valley of Kings, Geneva",
-    country: "Switzerland",
-    price: 900000,
-  },
-  {
-    id: 2,
-    address: "89 Road of Forks, Bern",
-    country: "Switzerland",
-    price: 500000,
-  },
-];
-
+import React, { useEffect, useState } from "react";
+import HouseRowMemo from "./houseRow";
+import AddHousesBtn from "./addHousesButton";
+import useHouses from "../hooks/useHouses";
+import LoadingIndicator from "./loadingIndicator";
+import loadingStatus from "../helpers/loadingStatus";
 const HouseList = () => {
-  const [houses, setHouses] = useState(houseArray);
-
-  const addHouse = () => {
-    setHouses([
-      ...houses,
-      {
-        id: 3,
-        address: "32 Valley Way, New York",
-        country: "USA",
-        price: 1000000,
-      },
-    ]);
-  };
-
+    const {houses,loadingState} = useHouses();
+    if(loadingState !== loadingStatus.loaded){
+    return  <LoadingIndicator loadingState={loadingState}></LoadingIndicator>
+    }
   return (
     <>
       <div className="row mb-2">
@@ -47,16 +25,15 @@ const HouseList = () => {
           </tr>
         </thead>
         <tbody>
-          {houses.map((h) => (
-            <HouseRow key={h.id} house={h} />
+          {houses.map((house) => (
+              <HouseRowMemo key={house.id} house={house} />
           ))}
         </tbody>
       </table>
-      <button className="btn btn-primary" onClick={addHouse}>
-        Add
-      </button>
+        <AddHousesBtn></AddHousesBtn>
     </>
   );
 };
 
 export default HouseList;
+
